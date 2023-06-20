@@ -1,8 +1,8 @@
-package imb3.service;
+package imb3.stock.service;
 
 import java.util.List;
 
-import imb3.entity.Empleado;
+import imb3.stock.entity.Empleado;
 
 public interface IEmpleadoService {
 	

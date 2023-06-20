@@ -1,4 +1,4 @@
-package service.jpa;
+package service.stock.jpa;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import imb3.entity.Empleado;
-import imb3.repository.EmpleadoRepository;
-import imb3.service.IEmpleadoService;
+import imb3.stock.entity.Empleado;
+import imb3.stock.repository.EmpleadoRepository;
+import imb3.stock.service.IEmpleadoService;
 
 @Service
 @Primary

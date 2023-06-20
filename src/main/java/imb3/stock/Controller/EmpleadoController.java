@@ -1,4 +1,4 @@
-package imb3.Controller;
+package imb3.stock.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import imb3.entity.Empleado;
-import imb3.service.IEmpleadoService;
+import imb3.stock.entity.Empleado;
+import imb3.stock.service.IEmpleadoService;
 
 @RestController
 @RequestMapping("/api/v1/Empleado")

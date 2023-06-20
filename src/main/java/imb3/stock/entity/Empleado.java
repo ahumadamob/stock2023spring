@@ -1,4 +1,4 @@
-package imb3.entity;
+package imb3.stock.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

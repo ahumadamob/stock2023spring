@@ -1,4 +1,4 @@
-package imb3.Controller;
+package imb3.stock.Controller;
 
 import java.util.List;
 
