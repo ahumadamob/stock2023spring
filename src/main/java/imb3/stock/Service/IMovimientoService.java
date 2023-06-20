@@ -1,8 +1,8 @@
-package imb3.Service;
+package imb3.stock.Service;
 
 import java.util.List;
 
-import imb3.entity.MovimientoStock;
+import imb3.stock.entity.MovimientoStock;
 
 public interface IMovimientoService {
 	public List<MovimientoStock> buscarMovimientos();

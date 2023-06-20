@@ -1,4 +1,4 @@
-package imb3.servicee.jpa;
+package imb3.stock.servicee.jpa;
 import java.util.List;
 import java.util.Optional;
 
@@ -6,16 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import imb3.Service.IMovimientoService;
-import imb3.entity.MovimientoStock;
-import imb3.repository.MovimientoRepository;
+import imb3.stock.Service.IMovimientoService;
+import imb3.stock.entity.MovimientoStock;
+import imb3.stock.repository.MovimientoRepository;
 
-@Primary
 @Service
+@Primary
 public class MovimientoService implements IMovimientoService {
 
 	@Autowired
-	private MovimientoRepository repo;
+	MovimientoRepository repo;
+	
 	@Override
 	public List<MovimientoStock> buscarMovimientos() {
 		return repo.findAll();
