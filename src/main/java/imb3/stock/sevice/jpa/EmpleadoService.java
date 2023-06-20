@@ -1,4 +1,4 @@
-package service.stock.jpa;
+package imb3.stock.sevice.jpa;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+
 
 import imb3.stock.entity.Empleado;
 import imb3.stock.repository.EmpleadoRepository;
@@ -20,13 +22,12 @@ public class EmpleadoService implements IEmpleadoService {
 	
 	@Override
 	public List<Empleado> buscarEmpleados() {
-
 		return repo.findAll();
+		
 	}
 
 	@Override
 	public Empleado buscarEmpleadoPorId(Integer id) {
-		
 		Optional<Empleado> optional = repo.findById(id);
 		if(optional.isPresent()) {
 			return optional.get();
@@ -35,11 +36,16 @@ public class EmpleadoService implements IEmpleadoService {
 		}		
 	}
 
+		
+
 	@Override
 	public void guardarEmpleado(Empleado empleado) {
-	 repo.save(empleado);
+		repo.save(empleado);
+			
+		}
 
-	}
+				
+	
 
 	@Override
 	public void eliminarEmpleado(Integer id) {
