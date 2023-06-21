@@ -1,11 +1,13 @@
-package imb3.stock.controller;
+package imb3.stock.Controller;
+
+import java.util.List;
 
 public class APIResponse<T> {
     private int status;
-    private String messages;
+    private List<String> messages;
     private T data;
     
-    public APIResponse(int status, String string, T data) {
+    public APIResponse(int status, List<String> string, T data) {
         this.status = status;
         this.messages = string;
         this.data = data;
@@ -19,11 +21,11 @@ public class APIResponse<T> {
         this.status = status;
     }
     
-    public String getMessages() {
+    public List<String> getMessages() {
         return messages;
     }
     
-    public void setMessages(String messages) {
+    public void setMessages(List<String> messages) {
         this.messages = messages;
     }
     
