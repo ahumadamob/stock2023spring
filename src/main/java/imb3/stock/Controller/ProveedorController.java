@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import imb3.stock.Service.IProveedorService;
 import imb3.stock.entity.Proveedor;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 
 @RestController 
@@ -104,4 +107,13 @@ public class ProveedorController {
 			}
 		}
 	}
+ 	@ExceptionHandler(ConstraintViolationException.class)
+ 	public ResponseEntity<APIResponse<?>> handleConstraintViolationException(ConstraintViolationException ex){
+ 		List<String> errors = new ArrayList<>();
+ 		for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+ 			errors.add(violation.getMessage());
+ 		}
+ 		APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), errors, null);
+ 		return ResponseEntity.badRequest().body(response);
+ 	}
  }
