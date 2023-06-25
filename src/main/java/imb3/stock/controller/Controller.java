@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,6 +61,8 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);			
 		}			
 	}
+	
+	@PutMapping
 	public ResponseEntity<APIResponse<Producto>> modificarCategoria(@RequestBody Producto producto) {
 		if(this.existe(producto.getIdProducto())) {
 			productoService.guardarProducto(producto);
@@ -72,8 +75,8 @@ public class Controller {
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
-
 	}
+	
 	@DeleteMapping("/{id}")	
 	public ResponseEntity<APIResponse<Producto>> eliminarCategoria(@PathVariable("id") Integer id) {
 		if(this.existe(id)) {
