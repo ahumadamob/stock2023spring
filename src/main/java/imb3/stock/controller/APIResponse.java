@@ -1,4 +1,4 @@
-package imb3.stock.Controller;
+package imb3.stock.controller;
 
 import java.util.List;
 
@@ -37,3 +37,4 @@ public class APIResponse<T> {
         this.data = data;
     }
 }
+
