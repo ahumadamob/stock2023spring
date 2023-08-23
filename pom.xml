@@ -8,7 +8,7 @@
 		<version>3.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>imb.2023</groupId>
+	<groupId>imb.pr2</groupId>
 	<artifactId>stock</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>stock</name>
@@ -39,11 +39,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
-		<dependency>
-			<groupId>imb.progra</groupId>
-			<artifactId>arq</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

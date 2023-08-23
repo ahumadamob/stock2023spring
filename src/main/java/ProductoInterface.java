@@ -1,7 +1,7 @@
 
 import java.util.List;
 
-import imb3.stock.entity.Producto;
+import imb.pr2.stock.entity.Producto;
 
 public interface ProductoInterface {
 
