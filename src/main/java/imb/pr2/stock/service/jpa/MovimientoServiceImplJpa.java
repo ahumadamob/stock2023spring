@@ -25,11 +25,7 @@ public class MovimientoServiceImplJpa implements IMovimientoService {
 	@Override
 	public Movimiento buscarMovimientoPorId(Integer id) {
 		Optional<Movimiento> optional = repo.findById(id);
-		if(optional.isPresent()) {
-			return optional.get();
-		}else {
-			return null;
-		}		
+		return optional.orElse(null);
 	}
 
 	@Override
