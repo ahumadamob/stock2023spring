@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import imb.pr2.stock.entity.Categoria;
-import imb.pr2.stock.service.ICategoriaInterface;
+import imb.pr2.stock.service.ICategoriaService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
@@ -26,11 +26,11 @@ import jakarta.validation.ConstraintViolationException;
 public class CategoriaController {
 	
 	@Autowired
-	ICategoriaInterface servicio;
+	ICategoriaService servicio;
 	
 	@PostMapping("/{nombre}")
-	public ResponseEntity<APIResponse<List<Categoria>>> postProcessor(@PathVariable String nombre) {
-		servicio.setCategoria(nombre);
+	public ResponseEntity<APIResponse<List<Categoria>>> postProcessor(@PathVariable Categoria categoria) {
+		servicio.setCategoria(categoria);
 		List<String> message = new ArrayList<>();
 		message.add("Categoria creada correctamente.");
 		APIResponse<List<Categoria>> response = new APIResponse<List<Categoria>>(HttpStatus.OK.value(),message,servicio.getCategorias());
@@ -70,22 +70,6 @@ public class CategoriaController {
 		}
 		
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<APIResponse<Categoria>> putProcessor(@PathVariable Integer id,@RequestBody Categoria categoria) {
-		if(this.existeId(id) == true) {
-			List<String> message = new ArrayList<>();
-			message.add("Categoria modificada correctamente");
-			servicio.modifyCategoria(id,categoria);
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.getCategoriaById(id));
-			return ResponseEntity.status(HttpStatus.OK).body(response);
-		}else {
-			List<String> message = new ArrayList<>();
-			message.add("El ID: "+id+" no existe.");
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.getCategoriaById(id));
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		}
-		
-	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> deleteProcessor(@PathVariable Integer id) {
