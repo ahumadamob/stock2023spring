@@ -23,15 +23,9 @@ public class ProveedorServiceImplJpa implements IProveedorService {
 	}
 
 	@Override
-	public Proveedor buscarProveedorPorId(Integer id) {
-			Optional<Proveedor> optional = repo.findById(id);
-			if(optional.isPresent()) {
-				return optional.get();
-			}else {
-				return null;
-			}
-		
-	}
+    public Proveedor buscarProveedorPorId(Integer id) {
+        return repo.findById(id).orElse(null);
+    }
 
 	@Override
 	public void guardarProveedor(Proveedor proveedor) {
