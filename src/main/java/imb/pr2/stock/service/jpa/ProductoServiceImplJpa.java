@@ -25,12 +25,7 @@ public class ProductoServiceImplJpa implements IProductoService{
 	
 	@Override
 	public Producto buscarProductoPorId (Integer id){
-		Optional<Producto> optional = repo.findById(id);
-		if(optional.isPresent()) {
-			return optional.get();
-		}else {
-			return null;
-		}		
+		return repo.findById(id).orElse(null);		
 	}
 	
 	@Override

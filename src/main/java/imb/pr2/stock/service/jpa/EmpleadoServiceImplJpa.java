@@ -24,15 +24,10 @@ public class EmpleadoServiceImplJpa implements IEmpleadoService {
 		
 	}
 
-	@Override
-	public Empleado buscarEmpleadoPorId(Integer id) {
-		Optional<Empleado> optional = repo.findById(id);
-		if(optional.isPresent()) {
-			return optional.get();
-		}else {
-			return null;
-		}		
-	}
+    @Override
+    public Empleado buscarEmpleadoPorId(Integer id) {
+        return repo.findById(id).orElse(null);
+    }
 
 		
 
