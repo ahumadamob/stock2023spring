@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import imb.pr2.stock.entity.Categoria;
 import imb.pr2.stock.service.ICategoriaService;
+import imb.pr2.stock.service.jpa.CategoriaServiceImplJpa;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
@@ -28,8 +29,8 @@ public class CategoriaController {
 	@Autowired
 	ICategoriaService servicio;
 	
-	@PostMapping("/{nombre}")
-	public ResponseEntity<APIResponse<List<Categoria>>> postProcessor(@PathVariable Categoria categoria) {
+	@PostMapping
+	public ResponseEntity<APIResponse<List<Categoria>>> postProcessor(@RequestBody Categoria categoria) {
 		servicio.setCategoria(categoria);
 		List<String> message = new ArrayList<>();
 		message.add("Categoria creada correctamente.");
@@ -55,7 +56,7 @@ public class CategoriaController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> getByIdProcessor(@PathVariable Integer id) {
-		if(this.existeId(id) == true) {
+		if(servicio.existe(id)) {
 			List<String> message = new ArrayList<>();
 			message.add("Categoria obtenida correctamente.");
 			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.getCategoriaById(id));
@@ -69,11 +70,26 @@ public class CategoriaController {
 		
 		}
 		
-	
+	@PutMapping("/{id}")
+	public ResponseEntity<APIResponse<Categoria>> putProcessor(@PathVariable Integer id,@RequestBody Categoria categoria) {
+		boolean responseBool = servicio.modifyCategoria(id,categoria);
+		if(responseBool) {
+			List<String> message = new ArrayList<>();
+			message.add("Categoria modificada correctamente");
+			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.getCategoriaById(id));
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		}else {
+			List<String> message = new ArrayList<>();
+			message.add("El ID: "+id+" no existe.");
+			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.getCategoriaById(id));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		
+	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> deleteProcessor(@PathVariable Integer id) {
-		if(this.existeId(id) == true) {
+		if(servicio.existe(id)) {
 			List<String> message = new ArrayList<>();
 			message.add("Categoria eliminada correctamente");
 			Categoria categoriasEliminada = servicio.getCategoriaById(id);
@@ -88,19 +104,6 @@ public class CategoriaController {
 		}
 	}
 	
-	public boolean existeId(Integer id) {
-		if (id==null) {
-			return false;
-		}else {
-			Categoria categoria = servicio.getCategoriaById(id);
-			if (categoria == null) {
-				return false;
-			}else {
-				return true;
-			}
-			
-		}
-	}
 	
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<APIResponse<?>> handleException(ConstraintViolationException ex){
