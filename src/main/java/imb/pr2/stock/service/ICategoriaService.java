@@ -9,7 +9,9 @@ public interface ICategoriaService {
 	public List<Categoria> getCategorias();
 	public Categoria getCategoriaById(Integer id);
 	public void setCategoria(Categoria categoria);
+	public boolean modifyCategoria(Integer id, Categoria categoria);
 	public void deleteByIdCategoria(Integer id);
+	public Boolean existe(Integer id);
 
 	
 }
