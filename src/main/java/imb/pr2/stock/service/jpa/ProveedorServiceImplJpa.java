@@ -40,4 +40,9 @@ public class ProveedorServiceImplJpa implements IProveedorService {
 		
 	}
 
+	@Override
+	public Boolean existe(Integer id) {
+		return repo.existsById(id);
+	}
+
 }

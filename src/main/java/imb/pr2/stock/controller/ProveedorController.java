@@ -35,8 +35,8 @@ public class ProveedorController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);	
 	}
  	@GetMapping("/{id}")
-	public ResponseEntity<APIResponse<Proveedor>> mostrarProveedorPorId(@PathVariable("id") Integer id) {
-		if(this.existe(id)) {
+	public ResponseEntity<APIResponse<Proveedor>> mostrarProveedorPorId(@PathVariable Integer id) {
+		if(proveedorService.existe(id)) {
 			Proveedor proveedor = proveedorService.buscarProveedorPorId(id);
 			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), null, proveedor);
 			return ResponseEntity.status(HttpStatus.OK).body(response);	
@@ -51,7 +51,7 @@ public class ProveedorController {
 	}
  	@PostMapping
     public ResponseEntity<APIResponse<Proveedor>> crearProveedor(@RequestBody Proveedor proveedor) {
-        if(this.existe(proveedor.getId())) {
+        if(proveedorService.existe((proveedor.getId()))) {
             List<String> messages = new ArrayList<>();
             messages.add("Ya existe un proveedor con el id = " + proveedor.getId().toString());
             messages.add("Para actualizar utilice el verbo PUT");
@@ -65,7 +65,7 @@ public class ProveedorController {
     }
  	@PutMapping	
 	public ResponseEntity<APIResponse<Proveedor>> modificarProveedor(@RequestBody Proveedor proveedor) {
-		if(this.existe(proveedor.getId())) {
+		if(proveedorService.existe(proveedor.getId())) {
 			proveedorService.guardarProveedor(proveedor);
 			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), null, proveedor);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -81,7 +81,7 @@ public class ProveedorController {
 	}
  	@DeleteMapping("/{id}")	
 	public ResponseEntity<APIResponse<Proveedor>> eliminarProveedor(@PathVariable("id") Integer id) {
-		if(this.existe(id)) {
+		if(proveedorService.existe(id)) {
 			proveedorService.eliminarProveedor(id);
 			List<String> messages = new ArrayList<>();
 			messages.add("El proveedor que figura en el cuerpo ha sido eliminado") ;			
@@ -95,18 +95,7 @@ public class ProveedorController {
 		}
 		
 	}
- 	private boolean existe(Integer id) {
-		if(id == null) {
-			return false;
-		}else{
-			Proveedor proveedor = proveedorService.buscarProveedorPorId(id);
-			if(proveedor == null) {
-				return false;				
-			}else {
-				return true;
-			}
-		}
-	}
+ 	
  	@ExceptionHandler(ConstraintViolationException.class)
  	public ResponseEntity<APIResponse<?>> handleConstraintViolationException(ConstraintViolationException ex){
  		List<String> errors = new ArrayList<>();
