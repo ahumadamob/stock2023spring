@@ -59,7 +59,7 @@ public class ProductoController {
 			productoService.guardarProducto(producto);
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.CREATED.value(), null, producto);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);			
-		}			
+		}
 	}
 	
 	@PutMapping	
@@ -82,7 +82,7 @@ public class ProductoController {
 		if(productoService.existe(id)) {
 			productoService.eliminarProducto(id);
 			List<String> messages = new ArrayList<>();
-			messages.add("El producto que figura en el cuerpo ha sido eliminada") ;			
+			messages.add("El producto que figura en el cuerpo ha sido eliminado") ;			
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.OK.value(), messages, null);
 			return ResponseEntity.status(HttpStatus.OK).body(response);	
 		}else {
