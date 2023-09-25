@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import imb.pr2.stock.controller.APIResponse;
+import imb.pr2.stock.entity.Movimiento;
 import imb.pr2.stock.entity.Producto;
 import imb.pr2.stock.service.IProductoService;
 
 @RestController
-@RequestMapping("/api/v1/Producto")
+@RequestMapping("/api/imb3/Producto")
 public class ProductoController {
 
 	@Autowired
@@ -34,7 +34,7 @@ public class ProductoController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Producto>> mostrarProductoPorId(@PathVariable("id") Integer id) {
-		if(this.existe(id)) {
+		if(productoService.existe(id)) {
 			Producto categoria = productoService.buscarProductoPorId(id);
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.OK.value(), null, categoria);
 			return ResponseEntity.status(HttpStatus.OK).body(response);	
@@ -48,8 +48,8 @@ public class ProductoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<APIResponse<Producto>> crearCategoria(@RequestBody Producto producto) {
-		if(this.existe(producto.getIdProducto())) {
+	public ResponseEntity<APIResponse<Producto>> guardarProducto(@RequestBody Producto producto) {
+		if(productoService.existe(producto.getIdProducto())) {
 			List<String> messages = new ArrayList<>();
 			messages.add("Ya existe un producto con el ID = " + producto.getIdProducto().toString());
 			messages.add("Para actualizar utilice el verbo PUT");
@@ -62,24 +62,24 @@ public class ProductoController {
 		}			
 	}
 	
-	@PutMapping
-	public ResponseEntity<APIResponse<Producto>> modificarCategoria(@RequestBody Producto producto) {
-		if(this.existe(producto.getIdProducto())) {
+	@PutMapping	
+	public ResponseEntity<APIResponse<Producto>> modificarProducto(@RequestBody Producto producto) {
+		if(productoService.existe(producto.getIdProducto())) {
 			productoService.guardarProducto(producto);
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.OK.value(), null, producto);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}else {
 			List<String> messages = new ArrayList<>();
-			messages.add("No existe una categoria con el ID especificado");
-			messages.add("Para crear una nueva utilice el verbo POST");
+			messages.add("No existe un producto con el id especificado");
+			messages.add("Para crear uno nuevo utilice el verbo POST");
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
 	
 	@DeleteMapping("/{id}")	
-	public ResponseEntity<APIResponse<Producto>> eliminarCategoria(@PathVariable("id") Integer id) {
-		if(this.existe(id)) {
+	public ResponseEntity<APIResponse<Producto>> eliminarProducto(@PathVariable("id") Integer id) {
+		if(productoService.existe(id)) {
 			productoService.eliminarProducto(id);
 			List<String> messages = new ArrayList<>();
 			messages.add("El producto que figura en el cuerpo ha sido eliminada") ;			
@@ -90,21 +90,6 @@ public class ProductoController {
 			messages.add("No existe un producto con el ID = " + id.toString());
 			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
-		}
-		
-	}
-	
-	
-	private boolean existe(Integer id) {
-		if(id == null) {
-			return false;
-		}else{
-			Producto producto = productoService.buscarProductoPorId(id);
-			if(producto == null) {
-				return false;				
-			}else {
-				return true;
-			}
 		}
 	}
 }
