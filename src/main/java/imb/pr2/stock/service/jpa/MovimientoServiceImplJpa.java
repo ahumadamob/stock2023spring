@@ -37,4 +37,8 @@ public class MovimientoServiceImplJpa implements IMovimientoService {
 		repo.deleteById(idMovimiento);
 	}
 
+	@Override 
+	public boolean existe(Integer id) {
+		return repo.existsById(id); 
+	}
 }

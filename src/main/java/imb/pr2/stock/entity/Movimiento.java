@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -14,12 +16,20 @@ public class Movimiento {
 	private Integer idMovimiento;
 	@Min(value = 0, message = "El ´tipo´ debe ser mayor o igual a 0")
 	private int tipo;
-	private int idCategoria;
+	@ManyToOne
+	@JoinColumn(name = "idCategoria")
+	private Categoria categoria;
 	@Max(value = 100, message = "La mayor cantidad de productos a vender o comprar es de 100")
 	private int cantidad;
-	private int idProducto;
-	private int idEmpleado;
-	private int idProveedor;
+	@ManyToOne
+	@JoinColumn(name = "idProducto")
+	private Producto producto;
+	@ManyToOne
+	@JoinColumn(name = "idEmpleado")
+	private Empleado empleado;
+	@ManyToOne
+	@JoinColumn(name = "idPoriveedor")
+	private Proveedor proveedor;
 	public Integer getIdMovimiento() {
 		return idMovimiento;
 	}
@@ -32,11 +42,11 @@ public class Movimiento {
 	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
-	public int getIdCategoria() {
-		return idCategoria;
+	public Categoria getCategoria() {
+		return categoria;
 	}
-	public void setIdCategoria(int idCategoria) {
-		this.idCategoria = idCategoria;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 	public int getCantidad() {
 		return cantidad;
@@ -44,23 +54,23 @@ public class Movimiento {
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
-	public int getIdProducto() {
-		return idProducto;
+	public Producto getProducto() {
+		return producto;
 	}
-	public void setIdProducto(int idProducto) {
-		this.idProducto = idProducto;
+	public void setProducto(Producto producto) {
+		this.producto = producto;
 	}
-	public int getIdEmpleado() {
-		return idEmpleado;
+	public Empleado getEmpleado() {
+		return empleado;
 	}
-	public void setIdEmpleado(int idEmpleado) {
-		this.idEmpleado = idEmpleado;
+	public void setEmpleado(Empleado empleado) {
+		this.empleado = empleado;
 	}
-	public int getIdProveedor() {
-		return idProveedor;
+	public Proveedor getProveedor() {
+		return proveedor;
 	}
-	public void setIdProveedor(int idProveedor) {
-		this.idProveedor = idProveedor;
+	public void setProveedor(Proveedor proveedor) {
+		this.proveedor = proveedor;
 	}
 	
 }
