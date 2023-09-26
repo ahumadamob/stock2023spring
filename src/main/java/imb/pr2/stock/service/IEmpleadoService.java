@@ -10,6 +10,7 @@ public interface IEmpleadoService {
 	public Empleado buscarEmpleadoPorId(Integer id);
 	public void guardarEmpleado(Empleado empleado);
 	public void eliminarEmpleado(Integer id);
+	public boolean existe (Integer id);
 	
 }
 	

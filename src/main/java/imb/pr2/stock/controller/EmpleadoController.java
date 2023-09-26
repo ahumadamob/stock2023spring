@@ -33,7 +33,7 @@ public class EmpleadoController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Empleado>> mostrarEmpleadoPorId(@PathVariable("id") Integer id) {
-		if (this.existe(id)) {
+		if (service.existe(id)) {
 			Empleado empleado = service.buscarEmpleadoPorId(id);
 			APIResponse<Empleado> response = new APIResponse<Empleado>(HttpStatus.OK.value(), null, empleado);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -48,7 +48,7 @@ public class EmpleadoController {
 
 	@PostMapping
 	public ResponseEntity<APIResponse<Empleado>> crearEmpleado(@RequestBody Empleado empleado) {
-		if (this.existe(empleado.getId())) {
+		if (service.existe(empleado.getId())) {
 			List<String> messages = new ArrayList<>();
 			messages.add("Ya existe un empleado con el ID = " + empleado.getId().toString());
 			messages.add("Para actualizar utilice el verbo PUT");
@@ -63,7 +63,7 @@ public class EmpleadoController {
 	
 	@PutMapping	
 	public ResponseEntity<APIResponse<Empleado>> modificarEmpleado(@RequestBody Empleado empleado) {
-		if(this.existe(empleado.getId())) {
+		if(service.existe(empleado.getId())) {
 			service.guardarEmpleado(empleado);
 			APIResponse<Empleado> response = new APIResponse<Empleado>(HttpStatus.OK.value(), null, empleado);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -79,7 +79,7 @@ public class EmpleadoController {
 	
 	@DeleteMapping("/{id}")	
 	public ResponseEntity<APIResponse<Empleado>> eliminarEmpleado(@PathVariable("id") Integer id) {
-		if(this.existe(id)) {
+		if(service.existe(id)) {
 			service.eliminarEmpleado(id);
 			List<String> messages = new ArrayList<>();
 			messages.add("El Empleado que figura en el cuerpo ha sido eliminado") ;			
@@ -95,17 +95,5 @@ public class EmpleadoController {
 	}
 
 
-	private boolean existe(Integer id) {
-		if (id == null) {
-			return false;
-		} else {
-			Empleado empleado = service.buscarEmpleadoPorId(id);
-			if (empleado == null) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-	}
 
 }
