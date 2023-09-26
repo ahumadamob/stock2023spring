@@ -3,6 +3,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import imb.pr2.stock.entity.Producto;
 
-public interface ProductorRepository extends JpaRepository<Producto,Integer>{
+public interface ProductoRepository extends JpaRepository<Producto,Integer>{
 
 }
