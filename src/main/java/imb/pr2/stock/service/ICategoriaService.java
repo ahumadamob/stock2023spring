@@ -10,6 +10,6 @@ public interface ICategoriaService {
 	public Categoria getCategoriaById(Integer id);
 	public void setCategoria(Categoria categoria);
 	public void deleteByIdCategoria(Integer id);
+	public boolean exists(Integer id);
 
-	
 }
