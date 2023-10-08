@@ -30,19 +30,32 @@ public class ProveedorController {
 	IProveedorService proveedorService;
 
  	@GetMapping
- 	public ResponseEntity<APIResponse<List<Proveedor>>> mostrarTodos() {		
-		APIResponse<List<Proveedor>> response = new APIResponse<List<Proveedor>>(200, null, proveedorService.buscarProveedores());
-		return ResponseEntity.status(HttpStatus.OK).body(response);	
+ 	public ResponseEntity<APIResponse<List<Proveedor>>> mostrarTodos() {
+ 		List<Proveedor> proveedorTmp = proveedorService.buscarProveedores();
+ 		if(!proveedorTmp.isEmpty()) {
+ 			List<String> messages = new ArrayList<>();
+ 			messages.add("Lista de proveedores encontrados.");
+ 			APIResponse<List<Proveedor>> response = new APIResponse<List<Proveedor>>(200, messages, proveedorService.buscarProveedores());
+ 			return ResponseEntity.status(HttpStatus.OK).body(response);
+ 		}
+ 		else {
+ 			List<String> messages = new ArrayList<>();
+ 			messages.add("No existen proveedores.");
+ 			APIResponse<List<Proveedor>> response = new APIResponse<List<Proveedor>>(200, messages, proveedorService.buscarProveedores());
+ 			return ResponseEntity.status(HttpStatus.OK).body(response);		
+ 		}
 	}
  	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Proveedor>> mostrarProveedorPorId(@PathVariable Integer id) {
 		if(proveedorService.existe(id)) {
+			List<String> messages = new ArrayList<>();
+			messages.add("Proveedor con id:" + id.toString() + " encontrado.");
 			Proveedor proveedor = proveedorService.buscarProveedorPorId(id);
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), null, proveedor);
+			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, proveedor);
 			return ResponseEntity.status(HttpStatus.OK).body(response);	
 		}else {
 			List<String> messages = new ArrayList<>();
-			messages.add("No se encontró la Categoría con id = " + id.toString());
+			messages.add("No se encontró el proveedor con id = " + id.toString());
 			messages.add("Revise nuevamente el parámetro");
 			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), messages, null);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
@@ -66,8 +79,10 @@ public class ProveedorController {
  	@PutMapping	
 	public ResponseEntity<APIResponse<Proveedor>> modificarProveedor(@RequestBody Proveedor proveedor) {
 		if(proveedorService.existe(proveedor.getId())) {
+			List<String> messages = new ArrayList<>();
+			messages.add("Proveedor modificado con exito.");
 			proveedorService.guardarProveedor(proveedor);
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), null, proveedor);
+			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, proveedor);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		else {
@@ -82,14 +97,14 @@ public class ProveedorController {
  	@DeleteMapping("/{id}")	
 	public ResponseEntity<APIResponse<Proveedor>> eliminarProveedor(@PathVariable("id") Integer id) {
 		if(proveedorService.existe(id)) {
-			proveedorService.eliminarProveedor(id);
 			List<String> messages = new ArrayList<>();
 			messages.add("El proveedor que figura en el cuerpo ha sido eliminado") ;			
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, null);
+			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, proveedorService.buscarProveedorPorId(id));
+			proveedorService.eliminarProveedor(id);
 			return ResponseEntity.status(HttpStatus.OK).body(response);	
 		}else {
 			List<String> messages = new ArrayList<>();
-			messages.add("No existe una categoria con el ID = " + id.toString());
+			messages.add("No existe el proveedor con el ID = " + id.toString());
 			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), messages, null);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
 		}
