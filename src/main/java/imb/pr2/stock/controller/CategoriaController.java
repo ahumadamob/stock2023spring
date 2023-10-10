@@ -56,7 +56,7 @@ public class CategoriaController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> getByIdProcessor(@PathVariable Integer id) {
-		if(servicio.existe(id)) {
+		if(servicio.exists(id)) {
 			List<String> message = new ArrayList<>();
 			message.add("Categoria obtenida correctamente.");
 			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.getCategoriaById(id));
@@ -89,7 +89,7 @@ public class CategoriaController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> deleteProcessor(@PathVariable Integer id) {
-		if(servicio.existe(id)) {
+		if(servicio.exists(id)) {
 			List<String> message = new ArrayList<>();
 			message.add("Categoria eliminada correctamente");
 			Categoria categoriasEliminada = servicio.getCategoriaById(id);
