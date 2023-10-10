@@ -42,21 +42,8 @@ public class CategoriaServiceImplJpa implements ICategoriaService{
 	}
 
 	@Override
-	public Boolean existe(Integer id) {
+	public boolean exists(Integer id) {
 		return repo.existsById(id);
-	}
-
-	@Override
-	public boolean modifyCategoria(Integer id,Categoria categoria) {
-		Optional<Categoria> optional = repo.findById(id);
-		if(optional.isPresent()) {
-			categoria.setId(id);
-			repo.save(categoria);
-			return true;
-		}else {
-			return false;
-		}
-		
 	}
 
 	

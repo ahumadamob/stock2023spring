@@ -38,7 +38,7 @@ public class MovimientoController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Movimiento>> mostrarMovimientoPorId(@PathVariable("id") Integer id){
-		if(this.existe(id)) {
+		if(service.existe(id)) {
 			Movimiento movimiento = service.buscarMovimientoPorId(id);
 			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.OK.value(), null, movimiento);
 			return ResponseEntity.status(HttpStatus.OK).body(response);	
@@ -53,7 +53,7 @@ public class MovimientoController {
 	
 	@PostMapping
 	public ResponseEntity<APIResponse<Movimiento>> crearMovimiento(@RequestBody Movimiento movimiento) {
-		if(this.existe(movimiento.getIdMovimiento())) {
+		if(service.existe(movimiento.getIdMovimiento())) {
 			List<String> messages = new ArrayList<>();
 			messages.add("Ya existe un movimiento con el id = " + movimiento.getIdMovimiento().toString());
 			messages.add("Para actualizar utilice el verbo PUT");
@@ -68,7 +68,7 @@ public class MovimientoController {
 	
 	@PutMapping	
 	public ResponseEntity<APIResponse<Movimiento>> modificarMovimiento(@RequestBody Movimiento movimiento) {
-		if(this.existe(movimiento.getIdMovimiento())) {
+		if(service.existe(movimiento.getIdMovimiento())) {
 			service.guardarMovimiento(movimiento);
 			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.OK.value(), null, movimiento);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -84,7 +84,7 @@ public class MovimientoController {
 	
 	@DeleteMapping("/{id}")	
 	public ResponseEntity<APIResponse<Movimiento>> eliminarMovimiento(@PathVariable("id") Integer id) {
-		if(this.existe(id)) {
+		if(service.existe(id)) {
 			service.eliminarMovimiento(id);
 			List<String> messages = new ArrayList<>();
 			messages.add("El movimiento que figura en el cuerpo ha sido eliminado") ;			
@@ -99,18 +99,7 @@ public class MovimientoController {
 		
 	}
 	
-	private boolean existe(Integer id) {
-		if(id == null) {
-			return false;
-		}else{
-			Movimiento movimiento = service.buscarMovimientoPorId(id);
-			if(movimiento == null) {
-				return false;				
-			}else {
-				return true;
-			}
-		}
-	}
+	
 	
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<APIResponse<?>> handleException(ConstraintViolationException ex){

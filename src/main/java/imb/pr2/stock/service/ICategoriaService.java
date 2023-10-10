@@ -11,7 +11,6 @@ public interface ICategoriaService {
 	public void setCategoria(Categoria categoria);
 	public boolean modifyCategoria(Integer id, Categoria categoria);
 	public void deleteByIdCategoria(Integer id);
-	public Boolean existe(Integer id);
+	public boolean exists(Integer id);
 
-	
 }

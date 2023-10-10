@@ -9,4 +9,5 @@ public interface IMovimientoService {
 	public Movimiento buscarMovimientoPorId(Integer id);
 	public void guardarMovimiento(Movimiento movimiento);
 	public void eliminarMovimiento(Integer idMovimiento);
+	public boolean existe(Integer id);
 }
