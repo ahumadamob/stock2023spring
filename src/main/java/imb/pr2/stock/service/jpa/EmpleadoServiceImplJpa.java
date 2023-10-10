@@ -46,4 +46,9 @@ public class EmpleadoServiceImplJpa implements IEmpleadoService {
 
 	}
 
+	@Override
+	public boolean existe(Integer id) {
+		return repo.existsById(id);
+	}
+
 }
