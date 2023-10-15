@@ -46,6 +46,12 @@ public class CategoriaServiceImplJpa implements ICategoriaService{
 		return repo.existsById(id);
 	}
 
+	@Override
+	public boolean modifyCategoria(Integer id, Categoria categoria) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	
 
 
