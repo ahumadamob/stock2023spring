@@ -1,10 +1,8 @@
 package imb.pr2.stock.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import imb.pr2.stock.entity.Proveedor;
 import imb.pr2.stock.service.IProveedorService;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 
@@ -29,95 +26,58 @@ public class ProveedorController {
 	@Autowired
 	IProveedorService proveedorService;
 
- 	@GetMapping
- 	public ResponseEntity<APIResponse<List<Proveedor>>> mostrarTodos() {
- 		List<Proveedor> proveedorTmp = proveedorService.buscarProveedores();
- 		if(!proveedorTmp.isEmpty()) {
- 			List<String> messages = new ArrayList<>();
- 			messages.add("Lista de proveedores encontrados.");
- 			APIResponse<List<Proveedor>> response = new APIResponse<List<Proveedor>>(200, messages, proveedorService.buscarProveedores());
- 			return ResponseEntity.status(HttpStatus.OK).body(response);
+ 	@GetMapping //Anotacion Usada para indicar que el metodo siguiende debe ejecutarse al ser llamado el GET.
+ 	public ResponseEntity<APIResponse<List<Proveedor>>> mostrarTodos() { //Metodo publico que devulve un objeto del tipo ResponseEntity<APIResponse<List<Proveedor>>> llamado mostrarTodos.
+ 		List<Proveedor> proveedores = proveedorService.buscar(); //Creacion de una variable del tipo List<Proveedor> llamada proveedores, indicando que es igual a una lista de proveedores si es que existe si no el valor de la variable sera null.
+ 		if(!proveedores.isEmpty()) { //Comprobarion si NO esta vacio, de la lista de proveedores almacenada en la variable proveedores.
+ 			return ResponseUtil.success(proveedores); //Devolucion del metodo si la lista de proveedores no estaba vacia.
  		}
- 		else {
- 			List<String> messages = new ArrayList<>();
- 			messages.add("No existen proveedores.");
- 			APIResponse<List<Proveedor>> response = new APIResponse<List<Proveedor>>(200, messages, proveedorService.buscarProveedores());
- 			return ResponseEntity.status(HttpStatus.OK).body(response);		
+ 		else { //Bloque de codigo a ejecutarse si falla la comprobacion anterior.
+ 			return ResponseUtil.notFound("No se encontraron proveedores."); //Devolucion del metodo si la lista de proveedores si estaba vacia.
  		}
 	}
  	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Proveedor>> mostrarProveedorPorId(@PathVariable Integer id) {
-		if(proveedorService.existe(id)) {
-			List<String> messages = new ArrayList<>();
-			messages.add("Proveedor con id:" + id.toString() + " encontrado.");
-			Proveedor proveedor = proveedorService.buscarProveedorPorId(id);
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, proveedor);
-			return ResponseEntity.status(HttpStatus.OK).body(response);	
+		if(proveedorService.exists(id)) {
+			return ResponseUtil.success(proveedorService.buscarPorId(id));
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No se encontró el proveedor con id = " + id.toString());
-			messages.add("Revise nuevamente el parámetro");
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
+			return ResponseUtil.notFound("No se encontro el proveedor con el id: "+id+".");	
 		}
 	
 	}
  	@PostMapping
     public ResponseEntity<APIResponse<Proveedor>> crearProveedor(@RequestBody Proveedor proveedor) {
-        if(proveedorService.existe((proveedor.getId()))) {
-            List<String> messages = new ArrayList<>();
-            messages.add("Ya existe un proveedor con el id = " + proveedor.getId().toString());
-            messages.add("Para actualizar utilice el verbo PUT");
-            APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), messages, null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        if(proveedorService.exists((proveedor.getId()))) {
+            return ResponseUtil.badRequest("Ya existe el proveedor con el id: "+proveedor.getId()+".");
         }else {
-            proveedorService.guardarProveedor(proveedor);
-            APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.CREATED.value(), null, proveedor);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseUtil.created(proveedorService.guardar(proveedor));
         }
     }
  	@PutMapping	
 	public ResponseEntity<APIResponse<Proveedor>> modificarProveedor(@RequestBody Proveedor proveedor) {
-		if(proveedorService.existe(proveedor.getId())) {
-			List<String> messages = new ArrayList<>();
-			messages.add("Proveedor modificado con exito.");
-			proveedorService.guardarProveedor(proveedor);
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, proveedor);
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+		if(proveedorService.exists(proveedor.getId())) {
+			return ResponseUtil.success(proveedorService.guardar(proveedor));
 		}
 		else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No existe un proveedor con el ID especificado");
-			messages.add("Para crear un nuevo proveedor utilice el verbo POST");
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			return ResponseUtil.badRequest("No existe el proveedor con el id: "+proveedor.getId()+".");
 		}
 
 	}
  	@DeleteMapping("/{id}")	
 	public ResponseEntity<APIResponse<Proveedor>> eliminarProveedor(@PathVariable("id") Integer id) {
-		if(proveedorService.existe(id)) {
-			List<String> messages = new ArrayList<>();
-			messages.add("El proveedor que figura en el cuerpo ha sido eliminado") ;			
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.OK.value(), messages, proveedorService.buscarProveedorPorId(id));
-			proveedorService.eliminarProveedor(id);
-			return ResponseEntity.status(HttpStatus.OK).body(response);	
+		if(proveedorService.exists(id)) {
+			Proveedor proveedorEliminado = proveedorService.buscarPorId(id);
+			proveedorService.eliminar(id);
+			return ResponseUtil.success(proveedorEliminado);
+			
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No existe el proveedor con el ID = " + id.toString());
-			APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
+			return ResponseUtil.badRequest("No existe el proveedor con el id: "+id+".");		
 		}
 		
 	}
  	
  	@ExceptionHandler(ConstraintViolationException.class)
- 	public ResponseEntity<APIResponse<?>> handleConstraintViolationException(ConstraintViolationException ex){
- 		List<String> errors = new ArrayList<>();
- 		for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
- 			errors.add(violation.getMessage());
- 		}
- 		APIResponse<Proveedor> response = new APIResponse<Proveedor>(HttpStatus.BAD_REQUEST.value(), errors, null);
- 		return ResponseEntity.badRequest().body(response);
+ 	public ResponseEntity<APIResponse<Object>> handleConstraintViolationException(ConstraintViolationException ex){
+ 		return ResponseUtil.handleConstraintException(ex);
  	}
  }
