@@ -5,9 +5,9 @@ import java.util.List;
 import imb.pr2.stock.entity.Movimiento;
 
 public interface IMovimientoService {
-	public List<Movimiento> buscarMovimientos();
-	public Movimiento buscarMovimientoPorId(Integer id);
-	public void guardarMovimiento(Movimiento movimiento);
-	public void eliminarMovimiento(Integer idMovimiento);
+	public List<Movimiento> buscar();
+	public Movimiento buscarPorId(Integer id);
+	public Movimiento guardar(Movimiento movimiento);
+	public void eliminar(Integer idMovimiento);
 	public boolean existe(Integer id);
 }
