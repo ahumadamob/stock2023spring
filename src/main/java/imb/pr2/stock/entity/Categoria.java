@@ -14,6 +14,7 @@ public class Categoria{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	@NotBlank(message = "El nombre no puede estar vacio")
 	@Size(max = 40, message = "El nombre no debe superar los 40 caracteres")
 	private String nombre;

@@ -30,45 +30,36 @@ public class CategoriaController {
 	ICategoriaService servicio;
 	
 	@PostMapping
-	public ResponseEntity<APIResponse<List<Categoria>>> postProcessor(@RequestBody Categoria categoria) {
-		servicio.setCategoria(categoria);
-		List<String> message = new ArrayList<>();
-		message.add("Categoria creada correctamente.");
-		APIResponse<List<Categoria>> response = new APIResponse<List<Categoria>>(HttpStatus.OK.value(),message,servicio.getCategorias());
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+	public ResponseEntity<APIResponse<Categoria>> guardar(@RequestBody Categoria categoria){
+		if (servicio.existe(categoria.getId())) {
+			return ResponseUtil.badRequest("Ya existe esta Categoria");
+		}else {
+			return ResponseUtil.created(servicio.guardar(categoria));
+		}
 	}
+	
 	
 	@GetMapping
-	public ResponseEntity<APIResponse<List<Categoria>>> getProcessor() {
-		if(servicio.getCategorias() != null) {
-			List<String> message = new ArrayList<>();
-			message.add("Categorias obtenidas correctamente.");
-			APIResponse<List<Categoria>> response = new APIResponse<List<Categoria>>(HttpStatus.OK.value(),message,servicio.getCategorias());
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+	public ResponseEntity<APIResponse<List<Categoria>>> buscarTodos(){
+		List<Categoria> categorias = servicio.buscarTodos();
+		if (categorias.isEmpty()) {
+			return ResponseUtil.notFound("No se encontraron categorias");
 		}else {
-			List<String> message = new ArrayList<>();
-			message.add("No existen categorias.");
-			APIResponse<List<Categoria>> response = new APIResponse<List<Categoria>>(HttpStatus.BAD_REQUEST.value(),message,servicio.getCategorias());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			return ResponseUtil.success(categorias);
 		}
-		
 	}
 	
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<APIResponse<Categoria>> getByIdProcessor(@PathVariable Integer id) {
-		if(servicio.exists(id)) {
-			List<String> message = new ArrayList<>();
-			message.add("Categoria obtenida correctamente.");
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.getCategoriaById(id));
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+	public ResponseEntity<APIResponse<Categoria>> buscarPorId(@PathVariable Integer id){
+		Categoria categoria = servicio.buscarPorId(id);
+		if(servicio.existe(id)) {
+			return ResponseUtil.success(categoria);
 		}else {
-			List<String> message = new ArrayList<>();
-			message.add("El ID: "+id+" no existe.");
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.getCategoriaById(id));
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			return ResponseUtil.notFound("No se encontro la categoria por el ID");
 		}
-		
-		}
+	}
+
 		
 	@PutMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> putProcessor(@PathVariable Integer id,@RequestBody Categoria categoria) {
@@ -76,12 +67,12 @@ public class CategoriaController {
 		if(responseBool) {
 			List<String> message = new ArrayList<>();
 			message.add("Categoria modificada correctamente");
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.getCategoriaById(id));
+			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,servicio.buscarPorId(id));
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}else {
 			List<String> message = new ArrayList<>();
 			message.add("El ID: "+id+" no existe.");
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.getCategoriaById(id));
+			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.buscarPorId(id));
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 		
@@ -89,17 +80,17 @@ public class CategoriaController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<APIResponse<Categoria>> deleteProcessor(@PathVariable Integer id) {
-		if(servicio.exists(id)) {
+		if(servicio.existe(id)) {
 			List<String> message = new ArrayList<>();
 			message.add("Categoria eliminada correctamente");
-			Categoria categoriasEliminada = servicio.getCategoriaById(id);
-			servicio.deleteByIdCategoria(id);
+			Categoria categoriasEliminada = servicio.buscarPorId(id);
+			servicio.eliminar(id);
 			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.OK.value(),message,categoriasEliminada);
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}else {
 			List<String> message = new ArrayList<>();
 			message.add("El ID: "+id+" no existe.");
-			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.getCategoriaById(id));
+			APIResponse<Categoria> response = new APIResponse<Categoria>(HttpStatus.BAD_REQUEST.value(),message,servicio.buscarPorId(id));
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
