@@ -19,21 +19,21 @@ public class EmpleadoServiceImplJpa implements IEmpleadoService {
 	EmpleadoRepository repo;
 	
 	@Override
-	public List<Empleado> buscarEmpleados() {
+	public List<Empleado> buscar() {
 		return repo.findAll();
 		
 	}
 
     @Override
-    public Empleado buscarEmpleadoPorId(Integer id) {
+    public Empleado buscarPorId(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
 		
 
 	@Override
-	public void guardarEmpleado(Empleado empleado) {
-		repo.save(empleado);
+	public Empleado guardar(Empleado empleado) {
+		return repo.save(empleado);
 			
 		}
 
@@ -41,7 +41,7 @@ public class EmpleadoServiceImplJpa implements IEmpleadoService {
 	
 
 	@Override
-	public void eliminarEmpleado(Integer id) {
+	public void eliminar(Integer id) {
 		repo.deleteById(id);
 
 	}
