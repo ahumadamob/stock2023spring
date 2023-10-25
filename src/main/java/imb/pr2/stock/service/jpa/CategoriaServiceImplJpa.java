@@ -18,41 +18,33 @@ public class CategoriaServiceImplJpa implements ICategoriaService{
 	CategoriaRepository repo;
 	
 	@Override
-	public void setCategoria(Categoria categoria) {
-		repo.save(categoria);
+	public Categoria guardar(Categoria categoria) {
+		return repo.save(categoria);
 	}
 	
 	@Override
-	public List<Categoria> getCategorias() {
+	public List<Categoria> buscarTodos(){
 		return repo.findAll();
 	}
 	
 	@Override
-    public Categoria getCategoriaById(Integer id) {
+    public Categoria buscarPorId(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
 	
 	
 	@Override
-	public void deleteByIdCategoria(Integer id) {
+	public void eliminar(Integer id) {
 		repo.deleteById(id);
 		
 		
 	}
 
 	@Override
-	public boolean exists(Integer id) {
+	public boolean existe(Integer id) {
 		return repo.existsById(id);
 	}
-
-	@Override
-	public boolean modifyCategoria(Integer id, Categoria categoria) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
 
 
 }
