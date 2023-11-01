@@ -27,53 +27,40 @@ public class ProductoController {
 	IProductoService productoService;
 	
 	@GetMapping
-	public ResponseEntity<APIResponse<List<Producto>>> mostrarTodos() {		
-		APIResponse<List<Producto>> response = new APIResponse<List<Producto>>(200, null, productoService.buscarProductos());
-		return ResponseEntity.status(HttpStatus.OK).body(response);	
+	public ResponseEntity<APIResponse<List<Producto>>> mostrarTodos() {
+		List<Producto> productos = productoService.buscarProductos();
+		if (!productos.isEmpty()) {
+			return ResponseUtil.success(productos);
+		}else {
+			return ResponseUtil.notFound("No se encontraron produtos.");
+		}
+		
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Producto>> mostrarProductoPorId(@PathVariable("id") Integer id) {
 		if(productoService.existe(id)) {
-			Producto categoria = productoService.buscarProductoPorId(id);
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.OK.value(), null, categoria);
-			return ResponseEntity.status(HttpStatus.OK).body(response);	
+			return ResponseUtil.success(productoService.buscarProductoPorId(id));
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No se encontró el producto con id = " + id.toString());
-			messages.add("Revise nuevamente el parámetro");
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
+			return ResponseUtil.notFound("No se encontro el producto con el id: " + id + ".");			
 		}
 	}
 	
 	@PostMapping
 	public ResponseEntity<APIResponse<Producto>> guardarProducto(@RequestBody Producto producto) {
 		if(productoService.existe(producto.getIdProducto())) {
-			List<String> messages = new ArrayList<>();
-			messages.add("Ya existe un producto con el ID = " + producto.getIdProducto().toString());
-			messages.add("Para actualizar utilice el verbo PUT");
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			return ResponseUtil.badRequest("Ya existe el producto con el id: " + producto.getIdProducto() + ".");
 		}else {
-			productoService.guardarProducto(producto);
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.CREATED.value(), null, producto);
-			return ResponseEntity.status(HttpStatus.CREATED).body(response);			
+			return ResponseUtil.created(productoService.guardarProducto(producto));
 		}
 	}
 	
 	@PutMapping	
 	public ResponseEntity<APIResponse<Producto>> modificarProducto(@RequestBody Producto producto) {
 		if(productoService.existe(producto.getIdProducto())) {
-			productoService.guardarProducto(producto);
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.OK.value(), null, producto);
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+			return ResponseUtil.success(productoService.guardarProducto(producto));
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No existe un producto con el id especificado");
-			messages.add("Para crear uno nuevo utilice el verbo POST");
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			return ResponseUtil.badRequest("No existe producto con id: " + producto.getIdProducto() + ".");
 		}
 	}
 	
@@ -81,15 +68,11 @@ public class ProductoController {
 	public ResponseEntity<APIResponse<Producto>> eliminarProducto(@PathVariable("id") Integer id) {
 		if(productoService.existe(id)) {
 			productoService.eliminarProducto(id);
-			List<String> messages = new ArrayList<>();
-			messages.add("El producto que figura en el cuerpo ha sido eliminado") ;			
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.OK.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.OK).body(response);	
+			Producto productoEliminado = productoService.buscarProductoPorId(id);
+			return ResponseUtil.success(productoEliminado);
+			
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No existe un producto con el ID = " + id.toString());
-			APIResponse<Producto> response = new APIResponse<Producto>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
+			return ResponseUtil.badRequest("No existe el producto con el id: " + id + ".");
 		}
 	}
 }
