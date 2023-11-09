@@ -32,69 +32,71 @@ public class MovimientoController {
 	
 	@GetMapping
 	public ResponseEntity<APIResponse<List<Movimiento>>> mostrarTodos(){
-		APIResponse<List<Movimiento>> response = new APIResponse<List<Movimiento>>(200, null, service.buscarMovimientos());
-		return ResponseEntity.status(HttpStatus.OK).body(response);
-	}
+		  List<Movimiento> movimientos = service.buscar();
+	         if(!movimientos.isEmpty()) { 
+	             return ResponseUtil.success(movimientos); 
+	         }
+	         else { 
+	             return ResponseUtil.notFound("No se encontraron movimientos."); 
+	         }
+	    }
+	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<APIResponse<Movimiento>> mostrarMovimientoPorId(@PathVariable("id") Integer id){
 		if(service.existe(id)) {
-			Movimiento movimiento = service.buscarMovimientoPorId(id);
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.OK.value(), null, movimiento);
-			return ResponseEntity.status(HttpStatus.OK).body(response);	
+	
+			return ResponseUtil.success(service.buscarPorId(id));	
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No se encontró el movimiento con id = " + id.toString());
-			messages.add("Revise nuevamente el parámetro");
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
+			
+			return ResponseUtil.notFound("No se encontro el Movimiento con el id: "+id+".");
+				
 		}
 	}
 	
 	@PostMapping
 	public ResponseEntity<APIResponse<Movimiento>> crearMovimiento(@RequestBody Movimiento movimiento) {
 		if(service.existe(movimiento.getIdMovimiento())) {
-			List<String> messages = new ArrayList<>();
-			messages.add("Ya existe un movimiento con el id = " + movimiento.getIdMovimiento().toString());
-			messages.add("Para actualizar utilice el verbo PUT");
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			  return ResponseUtil.badRequest("Ya existe el movimiento con el id: "+ movimiento.getIdMovimiento() +".");
+			
 		}else {
-			service.guardarMovimiento(movimiento);
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.CREATED.value(), null, movimiento);
-			return ResponseEntity.status(HttpStatus.CREATED).body(response);			
+						
+			return ResponseUtil.created(service.guardar(movimiento));
+		
 		}			
+		
 	}
 	
 	@PutMapping	
 	public ResponseEntity<APIResponse<Movimiento>> modificarMovimiento(@RequestBody Movimiento movimiento) {
 		if(service.existe(movimiento.getIdMovimiento())) {
-			service.guardarMovimiento(movimiento);
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.OK.value(), null, movimiento);
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+			
+			  return ResponseUtil.success(service.guardar(movimiento));
 		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No existe un movimiento con el id especificado");
-			messages.add("Para crear uno nuevo utilice el verbo POST");
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			 return ResponseUtil.badRequest("No existe el movimiento con el id: "+movimiento.getIdMovimiento()+".");
+			
 		}
 
 	}
-	
+	// @DeleteMapping es el verbo para eliminar un objeto el cual recibe un id por url 
 	@DeleteMapping("/{id}")	
+	// el metodo devuelve un ResponseEntity de la entidad movimiento,y recibe como parametro el id de la url 
 	public ResponseEntity<APIResponse<Movimiento>> eliminarMovimiento(@PathVariable("id") Integer id) {
+		// verifica en el metodo existe 
+		//si existe un registro con esa id...
 		if(service.existe(id)) {
-			service.eliminarMovimiento(id);
-			List<String> messages = new ArrayList<>();
-			messages.add("El movimiento que figura en el cuerpo ha sido eliminado") ;			
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.OK.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.OK).body(response);	
-		}else {
-			List<String> messages = new ArrayList<>();
-			messages.add("No existe un movimiento con el id = " + id.toString());
-			APIResponse<Movimiento> response = new APIResponse<Movimiento>(HttpStatus.BAD_REQUEST.value(), messages, null);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);			
+			//Crea una variable temporal con el objeto a elominar
+			 Movimiento movimientoEliminado = service.buscarPorId(id);
+			 //elimina con el objeto con el id recibido
+	            service.eliminar(id);
+	            //retorna un respuesta de tupo success devolviendo el objeto eliminado
+	            return ResponseUtil.success(movimientoEliminado);
+		}
+		// si no existe un registro con esa id...
+		else {
+			// se muestra el mensaje "No existe un movimiento con el id =" y muestra el id del movimiento buscado
+	          return ResponseUtil.badRequest("No existe el movimiento con el id: "+id+".");
+					
 		}
 		
 	}

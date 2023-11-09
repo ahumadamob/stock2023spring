@@ -6,10 +6,10 @@ import imb.pr2.stock.entity.Empleado;
 
 public interface IEmpleadoService {
 	
-	public List<Empleado> buscarEmpleados();
-	public Empleado buscarEmpleadoPorId(Integer id);
-	public void guardarEmpleado(Empleado empleado);
-	public void eliminarEmpleado(Integer id);
+	public List<Empleado> buscar();
+	public Empleado buscarPorId(Integer id);
+	public Empleado guardar(Empleado empleado);
+	public void eliminar(Integer id);
 	public boolean existe (Integer id);
 	
 }

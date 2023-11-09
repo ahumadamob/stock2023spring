@@ -18,22 +18,22 @@ public class MovimientoServiceImplJpa implements IMovimientoService {
 	MovimientoRepository repo;
 	
 	@Override
-	public List<Movimiento> buscarMovimientos() {
+	public List<Movimiento> buscar() {
 		return repo.findAll();
 	}
 
 	@Override
-	public Movimiento buscarMovimientoPorId(Integer id) {
+	public Movimiento buscarPorId(Integer id) {
 		return repo.findById(id).orElse(null);	
 	}
 
 	@Override
-	public void guardarMovimiento(Movimiento movimiento) {
-		repo.save(movimiento);
+	public Movimiento guardar(Movimiento movimiento) {
+		return repo.save(movimiento);
 	}
 
 	@Override
-	public void eliminarMovimiento(Integer idMovimiento) {
+	public void eliminar(Integer idMovimiento) {
 		repo.deleteById(idMovimiento);
 	}
 
