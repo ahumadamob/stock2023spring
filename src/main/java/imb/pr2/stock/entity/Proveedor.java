@@ -7,8 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-
-
 @Entity
 public class Proveedor {
 	@Id
@@ -17,6 +15,7 @@ public class Proveedor {
 	@NotBlank(message = "El nombre no puede estar vacío")
 	@Size(max = 50, message = "El nombre no debe superar los 50 caracteres") 
 	private String  nombre;
+	private boolean habilitado;
 	public Integer getId() {
 		return id;
 	}
@@ -29,5 +28,10 @@ public class Proveedor {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
+	public boolean getHabilitado() {
+		return habilitado;
+	}
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado;
+	}
 }

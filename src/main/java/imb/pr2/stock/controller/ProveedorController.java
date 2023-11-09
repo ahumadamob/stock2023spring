@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import imb.pr2.stock.entity.Producto;
 import imb.pr2.stock.entity.Proveedor;
 import imb.pr2.stock.service.IProveedorService;
 import jakarta.validation.ConstraintViolationException;
@@ -75,9 +76,61 @@ public class ProveedorController {
 		}
 		
 	}
- 	
  	@ExceptionHandler(ConstraintViolationException.class)
  	public ResponseEntity<APIResponse<Object>> handleConstraintViolationException(ConstraintViolationException ex){
  		return ResponseUtil.handleConstraintException(ex);
  	}
+ 	
+ 	
+ 	
+ 	
+ 	@PostMapping("/habilitar/{id}")
+	public ResponseEntity<APIResponse<Proveedor>> habilitarProducto(@PathVariable("id") Integer id) {
+		if(proveedorService.exists(id)) {
+			return ResponseUtil.success(proveedorService.habilitarProveedor(proveedorService.buscarPorId(id)));
+		}else {
+			return ResponseUtil.badRequest("No existe proveedor con id: " + id + ".");
+		}
+	}
+	@PostMapping("/deshabilitar/{id}")
+	public ResponseEntity<APIResponse<Proveedor>> deshabilitarProducto(@PathVariable("id") Integer id) {
+		if(proveedorService.exists(id)) {
+			return ResponseUtil.success(proveedorService.deshabilitarProveedor(proveedorService.buscarPorId(id)));
+		}else {
+			return ResponseUtil.badRequest("No existe proveedor con id: " + id + ".");
+		}
+	}
+	@GetMapping("/habilitados")
+	public ResponseEntity<APIResponse<List<Proveedor>>> mostrarHabilitados() {
+		List<Proveedor> proveedores = proveedorService.mostrarHabilitados();
+		if (!proveedores.isEmpty()) {
+			return ResponseUtil.success(proveedores);
+		}else {
+			return ResponseUtil.notFound("No se encontraron proveedores.");
+		}
+	}
+	@GetMapping("/deshabilitados")
+	public ResponseEntity<APIResponse<List<Proveedor>>> mostrarDeshabilitados() {
+		List<Proveedor> proveedores = proveedorService.mostrarDeshabilitados();
+		if (!proveedores.isEmpty()) {
+			return ResponseUtil.success(proveedores);
+		}else {
+			return ResponseUtil.notFound("No se encontraron proveedores.");
+		}
+	}
+	@DeleteMapping("/eliminarDeshabilitado/{id}")	
+	public ResponseEntity<APIResponse<Proveedor>> eliminarProveedorDeshabilitado(@PathVariable("id") Integer id) {
+		if(proveedorService.exists(id)) {
+			Proveedor proveedorEliminado = proveedorService.buscarPorId(id);
+			if(proveedorEliminado.getHabilitado()) {
+				return ResponseUtil.badRequest("El proveedor con el id: "+id+" esta habilitado");
+			}else {
+				proveedorService.eliminar(id);
+				return ResponseUtil.success(proveedorEliminado);
+			}
+		}else {
+			return ResponseUtil.badRequest("No existe el proveedor con el id: "+id+".");		
+		}
+		
+	}
  }
