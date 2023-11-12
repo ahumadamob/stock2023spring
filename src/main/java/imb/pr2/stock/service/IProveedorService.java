@@ -10,6 +10,8 @@ public interface IProveedorService {
 	public Proveedor guardar(Proveedor proveedor);
 	public void eliminar(Integer id);
 	public Boolean exists(Integer id);
-	
-
+	public Proveedor habilitarProveedor(Proveedor proveedor);
+	public Proveedor deshabilitarProveedor(Proveedor proveedor);
+	public List<Proveedor> mostrarHabilitados();
+	public List<Proveedor> mostrarDeshabilitados();
 }

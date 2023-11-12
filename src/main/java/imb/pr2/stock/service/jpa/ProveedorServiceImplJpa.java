@@ -20,23 +20,17 @@ public class ProveedorServiceImplJpa implements IProveedorService {
 		
 		return repo.findAll();
 	}
-
 	@Override
     public Proveedor buscarPorId(Integer id) {
         return repo.findById(id).orElse(null);
     }
-
 	@Override
 	public Proveedor guardar(Proveedor proveedor) {
 		return repo.save(proveedor);
-		
 	}
-
 	@Override
 	public void eliminar(Integer id) {
 		repo.deleteById(id);
-		
-		
 	}
 
 	@Override
@@ -47,5 +41,24 @@ public class ProveedorServiceImplJpa implements IProveedorService {
 			return repo.existsById(id);
 		}
 	}
-
+	@Override
+	public Proveedor habilitarProveedor(Proveedor proveedor) {
+		proveedor.setHabilitado(true);
+		repo.save(proveedor);
+		return proveedor;
+	}
+	@Override
+	public Proveedor deshabilitarProveedor(Proveedor proveedor) {
+		proveedor.setHabilitado(false);
+		repo.save(proveedor);
+		return proveedor;
+	}
+	@Override
+	public List<Proveedor> mostrarHabilitados() {
+		return repo.getByHabilitado(true);
+	}
+	@Override
+	public List<Proveedor> mostrarDeshabilitados() {
+		return repo.getByHabilitado(false);
+	}
 }
