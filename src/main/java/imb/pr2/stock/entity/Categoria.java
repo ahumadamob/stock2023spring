@@ -19,12 +19,17 @@ public class Categoria{
 	@Size(max = 40, message = "El nombre no debe superar los 40 caracteres")
 	private String nombre;
 	
+	private boolean habilitado;
+	
+	//id
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	//nombre
 	public String getNombre() {
 		return nombre;
 	}
@@ -32,4 +37,12 @@ public class Categoria{
 		this.nombre = nombre;
 	}
 	
+	//habilitado
+	public boolean isHabilitado() {
+		return habilitado;
+	}
+	
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado;
+	}
 }

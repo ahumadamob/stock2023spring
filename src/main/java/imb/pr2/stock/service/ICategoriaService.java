@@ -8,6 +8,8 @@ public interface ICategoriaService {
 	
 	public List<Categoria> buscarTodos();
 	
+	public List<Categoria> buscarHabilitados(boolean habilitado);
+	
 	public Categoria buscarPorId(Integer id);
 	
 	public Categoria guardar(Categoria categoria);

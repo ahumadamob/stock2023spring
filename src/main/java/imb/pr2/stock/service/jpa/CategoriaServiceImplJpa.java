@@ -46,5 +46,9 @@ public class CategoriaServiceImplJpa implements ICategoriaService{
 		return repo.existsById(id);
 	}
 
+	@Override
+	public List<Categoria> buscarHabilitados(boolean habilitado){
+		return repo.findByHabilitado(habilitado);
+	}
 
 }
