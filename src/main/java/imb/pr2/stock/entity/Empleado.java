@@ -17,6 +17,7 @@ public class Empleado {
 	@Size(max = 40, message = "El nombre no debe superar los 40 caracteres")
 	private String nombre;
 	private String tipoPuesto;
+	private	Integer dni;
 
 	public Integer getId() {
 		return id;
@@ -40,6 +41,14 @@ public class Empleado {
 
 	public void setTipoPuesto(String tipoPuesto) {
 		this.tipoPuesto = tipoPuesto;
+	}
+
+	public Integer getDni() {
+		return dni;
+	}
+
+	public void setDni(Integer dni) {
+		this.dni = dni;
 	}
 
 }

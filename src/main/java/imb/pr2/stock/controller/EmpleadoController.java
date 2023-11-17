@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import imb.pr2.stock.entity.Empleado;
+import imb.pr2.stock.entity.Proveedor;
 import imb.pr2.stock.service.IEmpleadoService;
+import imb.pr2.stock.service.jpa.*;
 
 @RestController
 @RequestMapping("/api/v1/Empleado")
@@ -46,29 +48,50 @@ public class EmpleadoController {
             return ResponseUtil.notFound("No se encontro el empleado con el id: "+id+".");}
         }
 
-	@PostMapping
+	@PostMapping 
 	
-    public ResponseEntity<APIResponse<Empleado>> crearProveedor(@RequestBody Empleado empleado) {
+    public ResponseEntity<APIResponse<Empleado>> crearEmpleado(@RequestBody Empleado empleado) {
         if(service.existe((empleado.getId()))) {
-            return ResponseUtil.badRequest("Ya existe el proveedor con el id: "+empleado.getId()+".");
+            return ResponseUtil.badRequest("Ya existe el proveedor con el id: "+empleado.getId()+". O con el dni: "+empleado.getDni());
         }else {
-            return ResponseUtil.created(service.guardar(empleado));
+        	Empleado empleadoCompararPorDni = service.buscarPorDni(empleado.getDni());
+        	if (empleadoCompararPorDni == null) {
+        		
+        		return ResponseUtil.created(service.guardar(empleado));
+        	}else {
+        		
+        		return ResponseUtil.badRequest("Ya existe el proveedor con el id: "+empleado.getId()+". O con el dni: "+empleado.getDni());
+        	}
+           
         }
     }
-
-	@PutMapping
+	
+	/*@PostMapping
+    public Empleado createEmpleado(@RequestBody Empleado empleado) {
+		if (this.E) {
+			
+			return this.service.guardar(empleado);
+		}
+		return null;
+        
+    }*/
+	
+	
+	
+	@PutMapping("/{id}")
 	public ResponseEntity<APIResponse<Empleado>> modificarEmpleado(@RequestBody Empleado empleado) {
         if(service.existe(empleado.getId())) {
+        	Empleado empleadoCompararPorDni = service.buscarPorDni(empleado.getDni());
+        	if((empleadoCompararPorDni == null) ||(empleadoCompararPorDni.getDni() == empleado.getDni()) );	
             return ResponseUtil.success(service.guardar(empleado));
         }
         else {
-            return ResponseUtil.badRequest("No existe el proveedor con el id: "+empleado.getId()+".");
+            return ResponseUtil.badRequest("No existe el proveedor con el id: "+empleado.getId()+". O con el dni: " +empleado.getDni());
         }
 
     }
 
 	@DeleteMapping("/{id}")
-
 	public ResponseEntity<APIResponse<Empleado>> eliminarEmpleado(@PathVariable("id") Integer id) {
         if(service.existe(id)) {
             Empleado empleadoEliminado = service.buscarPorId(id);
@@ -80,5 +103,13 @@ public class EmpleadoController {
         }
 
     }
+
+	@GetMapping("/dni/{dni}")
+	  public ResponseEntity<APIResponse<Empleado>> mostrarEmpleadoPorDni(@PathVariable Integer dni) {
+      if(service.buscarPorDni(dni) != null) {
+          return ResponseUtil.success(service.buscarPorDni(dni));
+      }else {
+          return ResponseUtil.notFound("No se encontro el empleado con el dni: "+dni+".");}
+      }
 
 }
