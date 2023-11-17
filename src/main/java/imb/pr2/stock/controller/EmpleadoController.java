@@ -78,7 +78,7 @@ public class EmpleadoController {
 	
 	
 	
-	@PutMapping("/Empleado/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<APIResponse<Empleado>> modificarEmpleado(@RequestBody Empleado empleado) {
         if(service.existe(empleado.getId())) {
         	Empleado empleadoCompararPorDni = service.buscarPorDni(empleado.getDni());
