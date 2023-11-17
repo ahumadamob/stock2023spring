@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import imb.pr2.stock.entity.Empleado;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
@@ -55,4 +56,9 @@ public class ResponseUtil {
         messages.add(message);
         return messages;
     }
+
+	public static ResponseEntity<APIResponse<Empleado>> serverError(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -50,5 +50,9 @@ public class EmpleadoServiceImplJpa implements IEmpleadoService {
 	public boolean existe(Integer id) {
 		return repo.existsById(id);
 	}
-
+	@Override
+	public Empleado buscarPorDni(Integer dni) {
+		return repo.getByDni(dni);
+	}
+	
 }
